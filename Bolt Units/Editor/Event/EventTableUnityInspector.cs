@@ -33,49 +33,48 @@ namespace CabinIcarus.BoltExtensions.Event
         private bool _autoSave;
         public override void OnInspectorGUI()
         {
-            base.OnInspectorGUI();
-            var path = AssetDatabase.GetAssetOrScenePath(Selection.activeObject);
-            if (oldEventTableUpdateTool.IsCanUpdate(path))
+            serializedObject.Update();
             {
-                if (GUILayout.Button("Update EventTable"))
+                var path = AssetDatabase.GetAssetOrScenePath(Selection.activeObject);
+                if (oldEventTableUpdateTool.IsCanUpdate(path))
                 {
-                    if (!oldEventTableUpdateTool.Update(path,serializedObject))
+                    if (GUILayout.Button("Update EventTable"))
                     {
-                        throw new Exception("Update EventTable Failure");
+                        if (!oldEventTableUpdateTool.Update(path, serializedObject))
+                        {
+                            throw new Exception("Update EventTable Failure");
+                        }
                     }
                 }
+
+                serializedObject.Update();
+                _names = _tableAsset.GetEventNames().ToArray();
+                _ids = _tableAsset.GetEventIDs().ToArray();
+
+                EditorGUILayout.LabelField($"Event Count:{_events.arraySize}");
+                _autoSave = EditorGUILayout.Toggle("Auto Save", _autoSave);
+                _addMode = EditorGUILayout.Toggle("Auto Add EventID", _addMode);
+
+                EditorGUILayout.BeginHorizontal();
+                {
+                    EditorGUIUtility.labelWidth = 15f;
+                    EditorGUILayout.LabelField("Event Name");
+                    EditorGUILayout.LabelField("Event ID");
+                    EditorGUILayout.LabelField("Event Args");
+                    EditorGUIUtility.labelWidth = 0;
+                }
+                EditorGUILayout.EndHorizontal();
+                _addEvent();
+                _removeAll();
+
+                _showEventTable();
+
+                if (GUI.changed && _autoSave)
+                {
+                    AssetDatabase.SaveAssets();
+                }
             }
-
-            serializedObject.Update();
-            _names = _tableAsset.GetEventNames().ToArray();
-            _ids = _tableAsset.GetEventIDs().ToArray();
-
-            EditorGUILayout.LabelField($"Event Count:{_events.arraySize}");
-            _autoSave = EditorGUILayout.Toggle("Auto Save", _autoSave);
-            _addMode = EditorGUILayout.Toggle("Auto Add EventID", _addMode);
-
-            EditorGUILayout.BeginHorizontal();
-            {
-                EditorGUIUtility.labelWidth = 15f;
-                EditorGUILayout.LabelField("Event Name");
-                EditorGUILayout.LabelField("Event ID");
-                EditorGUILayout.LabelField("Event Args");
-                EditorGUIUtility.labelWidth = 0;
-            }
-            EditorGUILayout.EndHorizontal();
-            _addEvent();
-            _removeAll();
-
-            _showEventTable();
-
-            if (GUI.changed && _autoSave)
-            {
-                AssetDatabase.SaveAssets();
-            }
-
             serializedObject.ApplyModifiedProperties();
-            serializedObject.Update();
-            Repaint();
         }
         
         protected void DrawUILine(Color color, int thickness = 2, int padding = 10)
@@ -92,75 +91,85 @@ namespace CabinIcarus.BoltExtensions.Event
         {
             for (var i = 0; i < _events.arraySize; i++)
             {
-                var @event = _events.GetArrayElementAtIndex(i);
-                var eventName = @event.FindPropertyRelative("_eventName");
-                var eventID = @event.FindPropertyRelative("_eventId");
-                var eventArgs = @event.FindPropertyRelative("_args");
-                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.BeginVertical("box");
                 {
-                    EditorGUILayout.PropertyField(eventName, GUIContent.none);
-                    EditorGUILayout.PropertyField(eventID, GUIContent.none);
-                    var argCount = EditorGUILayout.IntField(eventArgs.arraySize);
-                    if (GUI.changed)
+                    var @event = _events.GetArrayElementAtIndex(i);
+                    var eventName = @event.FindPropertyRelative("_eventName");
+                    var eventID = @event.FindPropertyRelative("_eventId");
+                    var eventArgs = @event.FindPropertyRelative("_args");
+
+                    EditorGUILayout.LabelField($"{i}:{eventName.stringValue}");
+                    
+                    EditorGUILayout.BeginHorizontal();
                     {
-                        eventArgs.arraySize = argCount;
+                        EditorGUILayout.PropertyField(eventName, GUIContent.none);
+                        EditorGUILayout.PropertyField(eventID, GUIContent.none);
+                        var argCount = EditorGUILayout.IntField(eventArgs.arraySize);
+                        if (GUI.changed)
+                        {
+                            eventArgs.arraySize = argCount;
+                        }
+
+                        if (GUILayout.Button("Remove"))
+                        {
+                            _events.DeleteArrayElementAtIndex(i);
+                            return;
+                        }
                     }
-                    if (GUILayout.Button("Remove"))
+                    EditorGUILayout.EndHorizontal();
+
+                    _showArgs(i, eventArgs);
+
+                    if (i < _events.arraySize - 1)
                     {
-                        _events.DeleteArrayElementAtIndex(i);
-                        return;
+                        DrawUILine(Color.black);
                     }
                 }
-                EditorGUILayout.EndHorizontal();
-
-                _showArgs(i, eventArgs);
-
-                if (i < _events.arraySize - 1)
-                {
-                    DrawUILine(Color.black);
-                }
+                EditorGUILayout.EndVertical();
             }
         }
 
         private void _showArgs(int index, SerializedProperty eventArgs)
         {
-            if (!_foldout(index, eventArgs.arraySize))
+            EditorGUI.indentLevel++;
             {
-                return;
-            }
-
-            for (int i = 0; i < eventArgs.arraySize; i++)
-            {
-                var arg = eventArgs.GetArrayElementAtIndex(i);
-                var argName = arg.FindPropertyRelative("_argName");
-                var argTypeStr = arg.FindPropertyRelative("_argTypeStr");
-                var argDesc = arg.FindPropertyRelative("_argDesc");
-                var argNotNull = arg.FindPropertyRelative("_notNull");
-//                var isDefault = arg.FindPropertyRelative("_isDefault");
-               // var @default = arg.FindPropertyRelative("_default");
-                EditorGUI.indentLevel++;
+                if (!_foldout(index, eventArgs.arraySize))
                 {
-                    if (i != 0)
-                    {
-                        DrawUILine(Color.white);
-                    }
+                    return;
+                }
 
-                    EditorGUIUtility.labelWidth = 80f;
-                    EditorGUILayout.PropertyField(argNotNull, new GUIContent("NotNull:"));
-                    EditorGUIUtility.labelWidth = 60f;
-                    EditorGUILayout.PropertyField(argName, new GUIContent("Name:"));
-                    var position = EditorGUILayout.BeginHorizontal();
+                for (int i = 0; i < eventArgs.arraySize; i++)
+                {
+                    var arg = eventArgs.GetArrayElementAtIndex(i);
+                    var argName = arg.FindPropertyRelative("_argName");
+                    var argTypeStr = arg.FindPropertyRelative("_argTypeStr");
+                    var argDesc = arg.FindPropertyRelative("_argDesc");
+                    var argNotNull = arg.FindPropertyRelative("_notNull");
+//                var isDefault = arg.FindPropertyRelative("_isDefault");
+                    // var @default = arg.FindPropertyRelative("_default");
+                    EditorGUI.indentLevel++;
                     {
-                        GUIStyle fontStyle = new GUIStyle
+                        if (i != 0)
                         {
-                            normal = { textColor = Color.red },
-                            fontSize = EditorStyles.label.fontSize
-                        };
+                            DrawUILine(Color.white);
+                        }
 
-                        EditorGUILayout.LabelField($"Type:{argTypeStr.stringValue.Split(',').First()}", fontStyle);
-                        _selectType(argTypeStr, position);
-                    }
-                    EditorGUILayout.EndHorizontal();
+                        EditorGUIUtility.labelWidth = 80f;
+                        EditorGUILayout.PropertyField(argNotNull, new GUIContent("NotNull:"));
+                        EditorGUIUtility.labelWidth = 60f;
+                        EditorGUILayout.PropertyField(argName, new GUIContent("Name:"));
+                        EditorGUILayout.BeginHorizontal();
+                        {
+                            GUIStyle fontStyle = new GUIStyle
+                            {
+                                normal = {textColor = Color.red},
+                                fontSize = EditorStyles.label.fontSize
+                            };
+
+                            EditorGUILayout.LabelField($"Type:{argTypeStr.stringValue.Split(',').First()}", fontStyle);
+                            _selectType(argTypeStr);
+                        }
+                        EditorGUILayout.EndHorizontal();
 
 //                    EditorGUIUtility.labelWidth = 80f;
 //                    EditorGUILayout.PropertyField(isDefault, new GUIContent("Is Default:"));
@@ -171,11 +180,13 @@ namespace CabinIcarus.BoltExtensions.Event
 //                        EditorGUILayout.PropertyField(@default, new GUIContent("Default:"));
 //                    }
 
-                    EditorGUIUtility.labelWidth = 60f;
-                    EditorGUILayout.PropertyField(argDesc, new GUIContent("Desc:"));
+                        EditorGUIUtility.labelWidth = 60f;
+                        EditorGUILayout.PropertyField(argDesc, new GUIContent("Desc:"));
+                    }
+                    EditorGUI.indentLevel--;
                 }
-                EditorGUI.indentLevel--;
             }
+            EditorGUI.indentLevel--;
 
         }
 
@@ -306,12 +317,12 @@ namespace CabinIcarus.BoltExtensions.Event
             }
         }
 
-        private void _selectType(SerializedProperty argTypeStr, Rect position)
+        private void _selectType(SerializedProperty argTypeStr)
         {
             if (GUILayout.Button("Select Type"))
-            {
-                var rect = GUILayoutUtility.GetLastRect();
-                rect = new Rect(position.width, position.yMax / 2, rect.width, rect.height);
+            { 
+                var rect = _getFuzzyWindowRect();
+                
                 FuzzyWindow.Show(rect,
                     _getOptionTree(_getCurrentType(argTypeStr.stringValue)), (option) =>
                     {
@@ -323,6 +334,15 @@ namespace CabinIcarus.BoltExtensions.Event
                         InternalEditorUtility.RepaintAllViews();
                     });
             }
+        }
+
+        private Rect _getFuzzyWindowRect()
+        {
+            var eve = UnityEngine.Event.current;
+            
+            var rect = new Rect(eve.mousePosition.x - 250, eve.mousePosition.y, 0,0);
+
+            return rect;
         }
 
         private Type _getCurrentType(string argStringValue)
