@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace CabinIcarus.BoltExtensions.Units
 {
-    //[UnitCategory("Icarus/Util/Events")]
+//    [UnitCategory("Icarus/Util/Events")]
     [UnitCategory("Events")]
     [UnitTitle("NewCustomEvent")]
     [UnitOrder(0)]

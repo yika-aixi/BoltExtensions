@@ -164,7 +164,6 @@ namespace CabinIcarus.BoltExtensions.Event
         [DoNotSerialize]
         public List<EventEntity> Events;
 
-
         public EventEntity SelectEvent { get; set; }
 
         public string SelectEventOfAssetName { get; set; }
