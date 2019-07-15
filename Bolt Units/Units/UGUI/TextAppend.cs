@@ -5,8 +5,8 @@
 //Icarus.UnityGameFramework.Bolt
 
 using System.Text;
-using Bolt;
 using Ludiq;
+using Ludiq.Bolt;
 using UnityEngine.UI;
 
 namespace CabinIcarus.BoltExtensions.Units.UGUI
@@ -22,11 +22,11 @@ namespace CabinIcarus.BoltExtensions.Units.UGUI
         public bool LineAppend;
 
         [DoNotSerialize]
-        [PortLabel("Text")]
+        [UnitPortLabel("Text")]
         public ValueInput _textCom;
 
         [DoNotSerialize]
-        [PortLabel("Content")]
+        [UnitPortLabel("Content")]
         public ValueInput _content;
 
         protected override void Definition()

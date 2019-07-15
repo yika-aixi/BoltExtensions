@@ -3,7 +3,7 @@
 //ヾ(•ω•`)o
 //2018年07月15日-03:16
 //Icarus.UnityGameFramework.Editor
-using Bolt;
+
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -24,7 +24,7 @@ namespace CabinIcarus.BoltExtensions
         [UnityEditor.MenuItem("Icarus/Util/Bolt/Update Flow Graph")]
         static void _updateFlowGraph()
         {
-            FlowGraph.WithStartUpdate();
+//            FlowGraph.WithStartUpdate();
         }
         
         private string _oldNameSpace;

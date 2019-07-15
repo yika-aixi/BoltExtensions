@@ -28,7 +28,7 @@ namespace CabinIcarus.BoltExtensions.Event
             int j = 0;
 
             int currentIndex = 0;
-            _events.arraySize = _eventNames.Children.Count;
+            _events.arraySize = _eventNames .Children.Count;
             foreach (YamlScalarNode eventName in _eventNames)
             {
                 var @event = _events.GetArrayElementAtIndex(i);

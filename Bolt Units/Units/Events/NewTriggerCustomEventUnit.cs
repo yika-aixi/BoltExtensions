@@ -4,12 +4,11 @@
 //2018年08月02日-02:18
 //Icarus.UnityGameFramework.Bolt
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bolt;
 using CabinIcarus.BoltExtensions.Event;
 using Ludiq;
+using Ludiq.Bolt;
 using UnityEngine;
 
 namespace CabinIcarus.BoltExtensions.Units
@@ -40,7 +39,7 @@ namespace CabinIcarus.BoltExtensions.Units
         /// The target of the event.
         /// </summary>
         [DoNotSerialize]
-        [PortLabelHidden]
+        [UnitPortLabelHidden]
         [NullMeansSelf]
         public ValueInput target { get; private set; }
 
@@ -76,7 +75,7 @@ namespace CabinIcarus.BoltExtensions.Units
                     }
                     else
                     {
-                        argument.SetDefaultValue(EventTable.SelectEvent.Args[i].ArgType.Default());
+                        argument.Default(EventTable.SelectEvent.Args[i].ArgType.Default());
                     }
                 }
             }

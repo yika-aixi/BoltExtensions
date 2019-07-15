@@ -1,0 +1,24 @@
+{
+    "name": "CabinIcarus.BoltExtensions.Editor",
+    "references": [
+        "GUID:ec2b965805f544f40bcabc20567eee64",
+        "GUID:52d093725aaba8e47981ac7703825dab",
+        "GUID:791f50df23e093f45a1869dbcf68debc",
+        "GUID:c62ca1038a21bd540ac8b01a3e1b5324",
+        "GUID:a18906d5acce6104ea4e03ee946db3c2",
+        "GUID:cef50f583e12181499a3aa14a30bac11",
+        "GUID:21a0f33da26281a4ba60a3ee8252f410",
+        "GUID:821d0e9eab207fd44b74f2f7047fb576",
+        "GUID:462b16fed736cc94f89c28547147e772"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

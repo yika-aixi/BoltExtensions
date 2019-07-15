@@ -5,8 +5,8 @@
 //Icarus.UnityGameFramework.Bolt
 
 using System;
-using Bolt;
 using Ludiq;
+using Ludiq.Bolt;
 
 namespace CabinIcarus.BoltExtensions.Units
 {
@@ -20,11 +20,11 @@ namespace CabinIcarus.BoltExtensions.Units
         public bool _isInt;
 
         [DoNotSerialize]
-        [PortLabel("Value")]
+        [UnitPortLabel("Value")]
         public ValueInput _value;
 
         [DoNotSerialize]
-        [PortLabel("结果")]
+        [UnitPortLabel("结果")]
         public ValueOutput _result;
 
         protected override void Definition()

@@ -5,8 +5,8 @@
 //Icarus.UnityGameFramework.Bolt
 
 using System;
-using Bolt;
 using Ludiq;
+using Ludiq.Bolt;
 
 namespace CabinIcarus.BoltExtensions.Units
 {
@@ -20,7 +20,7 @@ namespace CabinIcarus.BoltExtensions.Units
         public string _format = "yyyy/MM/dd HH:mm:ss";
 
         [DoNotSerialize]
-        [PortLabel("Result")]
+        [UnitPortLabel("Result")]
         public ValueOutput _result;
 
         protected override void Definition()

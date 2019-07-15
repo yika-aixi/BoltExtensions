@@ -4,8 +4,7 @@
 //2018年07月30日-05:12
 //Icarus.UnityGameFramework.Bolt
 
-using Bolt;
-using System.Collections.Generic;
+using Ludiq.Bolt;
 
 namespace CabinIcarus.BoltExtensions.Event
 {

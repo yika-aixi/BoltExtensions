@@ -7,8 +7,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Bolt;
 using Ludiq;
+using Ludiq.Bolt;
 
 namespace CabinIcarus.BoltExtensions.Units
 {
@@ -30,11 +30,11 @@ namespace CabinIcarus.BoltExtensions.Units
         public bool isFilter = true;
 
         [DoNotSerialize]
-        [PortLabel("目录路径")]
+        [UnitPortLabel("目录路径")]
         public ValueInput _directoryPath;
 
         [DoNotSerialize]
-        [PortLabel("结果")]
+        [UnitPortLabel("结果")]
         public ValueOutput _resultOut;
 
         protected override void Definition()

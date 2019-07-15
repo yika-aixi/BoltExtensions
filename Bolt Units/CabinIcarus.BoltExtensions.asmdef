@@ -1,7 +1,12 @@
 {
     "name": "CabinIcarus.BoltExtensions",
     "references": [
-        "GUID:2bafac87e7f4b9b418d9448d219b01ab"
+        "GUID:2bafac87e7f4b9b418d9448d219b01ab",
+        "GUID:21a0f33da26281a4ba60a3ee8252f410",
+        "GUID:821d0e9eab207fd44b74f2f7047fb576",
+        "GUID:462b16fed736cc94f89c28547147e772",
+        "GUID:8b88c945cea00454e95f5e3d853bfa94",
+        "GUID:00df8bbfaba8883489e5c2310b2b6214"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -337,7 +337,7 @@ namespace CabinIcarus.BoltExtensions.Event
 
         private IFuzzyOptionTree _getOptionTree(object currentSelectType)
         {
-            var optionTree = new TypeOptionTree(Codebase.GetTypeSetFromAttribute(Metadata.Root()));
+            var optionTree = new TypeOptionTree(Codebase.GetRegisteredTypes<RegisterExtractorAttribute>());
             optionTree.selected.Clear();
             optionTree.selected.Add(currentSelectType);
             return optionTree;

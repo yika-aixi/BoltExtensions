@@ -5,8 +5,7 @@
 //Icarus.UnityGameFramework.Bolt
 
 using System;
-using Bolt;
-using Ludiq;
+using Ludiq.Bolt;
 using UnityEngine;
 
 namespace CabinIcarus.BoltExtensions.Util
@@ -85,13 +84,7 @@ namespace CabinIcarus.BoltExtensions.Util
                 throw new Exception("Flow of GraphStack is null, Get New Flow Failure!");
             }
 
-            return GetFlow(flow.stack.AsReference());
-        }
-
-
-        public static Flow GetFlow(GraphReference reference)
-        {
-            return Flow.New(reference);
+            return flow.GetNewFlow();
         }
     }
 }

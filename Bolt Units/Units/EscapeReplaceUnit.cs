@@ -4,9 +4,9 @@
 //2018年08月30日-01:05
 //Icarus.Chess.Bolt
 
-using Bolt;
 using CabinIcarus.BoltExtensions.Utility;
 using Ludiq;
+using Ludiq.Bolt;
 
 namespace CabinIcarus.BoltExtensions.Units
 {
@@ -15,11 +15,11 @@ namespace CabinIcarus.BoltExtensions.Units
     public class EscapeReplaceUnit:IcUnit
     {
         [DoNotSerialize]
-        [PortLabel("Str")]
+        [UnitPortLabel("Str")]
         public ValueInput _str;
 
         [DoNotSerialize]
-        [PortLabel("New Str")]
+        [UnitPortLabel("New Str")]
         public ValueOutput _result;
 
 

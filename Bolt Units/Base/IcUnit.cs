@@ -4,18 +4,20 @@
 //2018年07月28日-06:23
 //Icarus.UnityGameFramework.Bolt
 
-using Bolt;
+
 using Ludiq;
+using Ludiq.Bolt;
 
 namespace CabinIcarus.BoltExtensions
 {
     public abstract class IcUnit : Unit
     {
         [DoNotSerialize]
-        [PortLabelHidden]
+        [UnitPortLabelHidden]
         public ControlInput _enter;
+        
         [DoNotSerialize]
-        [PortLabelHidden]
+        [UnitPortLabelHidden]
         public ControlOutput _exit;
 
         protected override void Definition()

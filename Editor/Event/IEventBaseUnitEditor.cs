@@ -4,25 +4,26 @@
 //2018年07月30日-05:25
 //Icarus.UnityGameFramework.Editor
 
-using Bolt;
-using Ludiq;
-using System;
 using System.Linq;
+using CabinIcarus.BoltExtensions.Event;
+using Ludiq;
+using Ludiq.Bolt;
 using UnityEngine;
+
+[assembly: RegisterEditor(typeof(IEventBaseUnit), typeof(IEventBaseUnitEditor))]
 
 namespace CabinIcarus.BoltExtensions.Event
 {
-    [Editor(typeof(IEventBaseUnit))]
     public class IEventBaseUnitEditor : UnitEditor
     {
-        protected Metadata TableScriptableObject => metadata[nameof(IEventBaseUnit.EventTableAsset)];
-        protected Metadata Table => metadata[nameof(IEventBaseUnit.EventTable)];
+        protected MemberAccessor TableScriptableObject => accessor[nameof(IEventBaseUnit.EventTableAsset)];
+        protected MemberAccessor Table => accessor[nameof(IEventBaseUnit.EventTable)];
 
-        protected Metadata EventId => metadata[nameof(IEventBaseUnit.EventId)];
+        protected MemberAccessor EventId => accessor[nameof(IEventBaseUnit.EventId)];
 
-        protected Metadata EventName => metadata[nameof(IEventBaseUnit.EventName)];
+        protected MemberAccessor EventName => accessor[nameof(IEventBaseUnit.EventName)];
 
-        public IEventBaseUnitEditor(Metadata metadata) : base(metadata)
+        public IEventBaseUnitEditor(Accessor accessor) : base(accessor)
         {
         }
 
@@ -30,7 +31,7 @@ namespace CabinIcarus.BoltExtensions.Event
         {
             base.OnGUI(position, label);
 
-            BeginBlock(metadata, position);
+            BeginBlock(accessor, position);
             {
                 if (Table.value == null)
                 {
@@ -57,7 +58,7 @@ namespace CabinIcarus.BoltExtensions.Event
 
                     if (table.SelectEvent != null)
                     {
-                        idInput.SetDefaultValue(table.SelectEvent.EventID);
+                        idInput.Default(table.SelectEvent.EventID);
                     }
                 }
 
@@ -66,13 +67,13 @@ namespace CabinIcarus.BoltExtensions.Event
                     var nameInput = (ValueInput)EventName.value;
                     if (table.SelectEvent != null)
                     {
-                        nameInput.SetDefaultValue(table.SelectEvent.EventName);
+                        nameInput.Default(table.SelectEvent.EventName);
                     }
                 }
             }
-            if (EndBlock(metadata))
+            if (EndBlock())
             {
-                metadata.RecordUndo();
+                accessor.RecordUndo();
             }
         }
     }

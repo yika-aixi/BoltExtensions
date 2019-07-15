@@ -5,8 +5,8 @@
 //Icarus.UnityGameFramework.Bolt
 
 using System.Collections.Generic;
-using Bolt;
 using Ludiq;
+using Ludiq.Bolt;
 
 namespace CabinIcarus.BoltExtensions.Units
 {
@@ -17,24 +17,23 @@ namespace CabinIcarus.BoltExtensions.Units
     {
 
         [DoNotSerialize]
-        [PortLabel("用户名")]
+        [UnitPortLabel("用户名")]
         public ValueInput _userName;
 
         [DoNotSerialize]
-        [PortLabel("密码")]
+        [UnitPortLabel("密码")]
         public ValueInput _passWord;
 
         [DoNotSerialize]
-        [PortLabelHidden]
+        [UnitPortLabelHidden]
         public ControlInput _enter;
 
         [DoNotSerialize]
-        [PortLabelHidden]
+        [UnitPortLabelHidden]
         public ControlOutput _exit;
-
-
+        
         [DoNotSerialize]
-        [PortLabel("授权头")]
+        [UnitPortLabel("授权头")]
         public ValueOutput _authorizationHeader;
 
         protected override void Definition()

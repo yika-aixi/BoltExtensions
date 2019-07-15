@@ -6,9 +6,9 @@
 
 using System;
 using System.Collections.Generic;
-using Bolt;
 using CabinIcarus.BoltExtensions.Event;
 using Ludiq;
+using Ludiq.Bolt;
 using UnityEngine;
 
 namespace CabinIcarus.BoltExtensions.Units
@@ -30,7 +30,7 @@ namespace CabinIcarus.BoltExtensions.Units
         [DoNotSerialize]
         public ValueInput EventId { get; private set; }
         [DoNotSerialize]
-        [PortLabel("Event Name")]
+        [UnitPortLabel("Event Name")]
         public ValueInput EventName { get; private set; }
 
         [Serialize]
@@ -38,10 +38,12 @@ namespace CabinIcarus.BoltExtensions.Units
         public int EventArgCount { get; private set; }
 
         private static readonly string NewhookName = $"New {EventHooks.Custom}";
-        protected override string hookName => NewhookName;
+        public override string hookName => NewhookName;
 
         [DoNotSerialize]
         public List<ValueOutput> argumentPorts { get; } = new List<ValueOutput>();
+
+        public override Type eventProxyType { get; }
 
         protected override void Definition()
         {

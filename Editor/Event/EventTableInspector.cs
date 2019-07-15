@@ -6,29 +6,32 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using CabinIcarus.BoltExtensions.Event;
 using Ludiq;
 using UnityEditor;
 using UnityEngine;
 
+[assembly: RegisterEditor (typeof(EventTable), typeof(EventableInspector))] 
+
 namespace CabinIcarus.BoltExtensions.Event
 {
-    [Inspector(typeof(EventTable))]
+//    [Inspector(typeof(EventTable))]
     public class EventableInspector : Inspector
     {
-        public EventableInspector(Metadata metadata) : base(metadata)
+        public EventableInspector(Accessor accessor) : base(accessor)
         {
         }
-
+        
         protected override float GetHeight(float width, GUIContent label)
         {
             return 20f;
         }
 
-        protected Metadata Events => metadata["Events"];
+        protected MemberAccessor Events => accessor["Events"];
 
-        protected Metadata SelectEvent => metadata[nameof(EventTable.SelectEvent)];
+        protected MemberAccessor SelectEvent => accessor[nameof(EventTable.SelectEvent)];
 
-        protected Metadata SelectEventOfAssetName => metadata[nameof(EventTable.SelectEventOfAssetName)];
+        protected MemberAccessor SelectEventOfAssetName => accessor[nameof(EventTable.SelectEventOfAssetName)];
 
         private List<string> _names;
         private List<int> _ids;
@@ -38,7 +41,7 @@ namespace CabinIcarus.BoltExtensions.Event
 
         protected override void OnGUI(Rect position, GUIContent label)
         {
-            var table = (EventTable)metadata.value;
+            var table = (EventTable)accessor.value;
             _names = new List<string>();
             _ids = new List<int>();
             var popRect = new Rect(position.x + 50, position.y, position.width, position.height);
@@ -123,7 +126,7 @@ namespace CabinIcarus.BoltExtensions.Event
                 }
             }
             
-            BeginBlock(metadata, position);
+            BeginBlock(accessor, position);
             {
                 SelectEvent.value = table.GetEvent(_ids[_selectIndex]);
                 var selectEventName = SelectEvent[nameof(EventEntity.EventName)];
@@ -132,9 +135,9 @@ namespace CabinIcarus.BoltExtensions.Event
                 selectEventId.value = _ids[_selectIndex];
                 SelectEventOfAssetName.value = table.TableAssetName;
             }
-            if (EndBlock(metadata))
+            if (EndBlock())
             {
-                metadata.RecordUndo();
+                accessor.RecordUndo();
             }
 
         }
