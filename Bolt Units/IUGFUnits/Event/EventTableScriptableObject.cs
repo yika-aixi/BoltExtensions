@@ -37,7 +37,7 @@ namespace CabinIcarus.BoltExtensions.Event
 
         private void _init()
         {
-            _eventCount = _table.Events.Count;
+            _eventCount = _table.Events?.Count ?? 0;
             _events = new EventEntity[_eventCount];
         }
 
