@@ -6,11 +6,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using CabinIcarus.EditorFrame.Utils;
 using Ludiq;
 using UnityEditor;
 using UnityEngine;
-using EditorGUIUtility = UnityEditor.Experimental.Networking.PlayerConnection.EditorGUIUtility;
 
 namespace CabinIcarus.BoltExtensions.Event
 {

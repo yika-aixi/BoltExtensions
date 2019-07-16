@@ -5,7 +5,6 @@
 //Icarus.UnityGameFramework.Bolt
 
 using Bolt;
-using System.Collections.Generic;
 
 namespace CabinIcarus.BoltExtensions.Event
 {

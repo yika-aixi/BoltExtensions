@@ -217,7 +217,6 @@ namespace CabinIcarus.BoltExtensions.Event
         private void _drawSetDefault(SerializedProperty arg, Type paraType)
         {
             SerializedProperty @default;
-//            EditorGUILayout.PropertyField(@default, new GUIContent("Default:"));
             if (paraType == typeof(int))
             {
                 @default = arg.FindPropertyRelative("_intValue");
@@ -426,9 +425,6 @@ namespace CabinIcarus.BoltExtensions.Event
                     }
 
                     _addElement(_eventName, _id, _argCount);
-                    //                    _addElement(_events, _eventName, false);
-                    //                    _addElement(_eventIDs, _id);
-                    //                    _addElement(_eventArgCount, _argCount);
                 }
             }
             EditorGUILayout.EndHorizontal();
