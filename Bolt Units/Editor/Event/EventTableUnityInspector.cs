@@ -201,7 +201,6 @@ namespace CabinIcarus.BoltExtensions.Event
 
                         if (isDefault.boolValue)
                         {
-                            EditorGUIUtility.labelWidth = 60f;
                             _drawSetDefault(arg,Type.GetType(argTypeStr.stringValue));
                         }
 
