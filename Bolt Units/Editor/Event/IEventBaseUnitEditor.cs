@@ -6,7 +6,6 @@
 
 using Bolt;
 using Ludiq;
-using System;
 using System.Linq;
 using UnityEngine;
 
@@ -24,12 +23,20 @@ namespace CabinIcarus.BoltExtensions.Event
 
         public IEventBaseUnitEditor(Metadata metadata) : base(metadata)
         {
+            if (_lastEventTableAsset)
+            {
+                if (TableScriptableObject.value == null)
+                {
+                    TableScriptableObject.value = _lastEventTableAsset;
+                }
+            }
         }
 
+        private static EventTableScriptableObject _lastEventTableAsset;
+        
         protected override void OnGUI(Rect position, GUIContent label)
         {
             base.OnGUI(position, label);
-
             BeginBlock(metadata, position);
             {
                 if (Table.value == null)
@@ -37,13 +44,16 @@ namespace CabinIcarus.BoltExtensions.Event
                     Table.value = new EventTable();
                     return;
                 }
+                
                 var table = (EventTable)Table.value;
 
                 if (TableScriptableObject.value != null)
                 {
                     var tableAsset = ((EventTableScriptableObject)
                         TableScriptableObject.value);
-
+                    
+                    _lastEventTableAsset = tableAsset;
+                    
                     EventEntity[] entities = new EventEntity[tableAsset.Table.Events.Count];
                     tableAsset.Table.Events.CopyTo(entities, 0);
                     table.Events = entities.ToList();
