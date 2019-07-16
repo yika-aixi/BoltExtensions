@@ -14,8 +14,9 @@ using UnityEngine;
 
 namespace CabinIcarus.BoltExtensions.Units
 {
-    [UnitCategory("Icarus/Util/Events")]
-    [UnitTitle("TriggerCustomEvent")]
+//    [UnitCategory("Icarus/Events")]
+    [UnitCategory("Events")]
+    [UnitTitle("NewTriggerCustomEvent")]
     [TypeIcon(typeof(CustomEvent))]
     [UnitOrder(1)]
     public class NewTriggerCustomEventUnit:IcUnit,IEventBaseUnit
@@ -31,10 +32,6 @@ namespace CabinIcarus.BoltExtensions.Units
         public ValueInput EventId { get; private set; }
         [DoNotSerialize]
         public ValueInput EventName { get; private set; }
-
-        [Serialize]
-        [Inspectable, UnitHeaderInspectable("Arg Count")]
-        public int EventArgCount { get; private set; }
 
         /// <summary>
         /// The target of the event.
@@ -56,11 +53,10 @@ namespace CabinIcarus.BoltExtensions.Units
             target = ValueInput<GameObject>(nameof(target), null).NullMeansSelf();
 
             arguments = new List<ValueInput>();
-            _setEventArgCountAndArgList();
-            if (EventTable != null && EventTable.SelectEvent != null &&
-                EventTable.SelectEvent.Args != null &&
-                EventTable.SelectEvent.Args.Count == EventArgCount)
+            if (EventTable != null)
             {
+                EventTable.SelectEvent = EventTable.GetEvent(EventTable.SelectEvent.EventID);
+                
                 for (var i = 0; i < EventTable.SelectEvent.Args.Count; i++)
                 {
                     var argName = EventTable.SelectEvent.Args[i].ArgName;
@@ -68,10 +64,14 @@ namespace CabinIcarus.BoltExtensions.Units
                     {
                         argName = $"argument_{i}";
                     }
+                    
                     var argument = ValueInput(EventTable.SelectEvent.Args[i].ArgType,argName);
+                    
                     arguments.Add(argument);
+
                     if(EventTable.SelectEvent.Args[i].NotNull)
                     {
+                        argument.SetDefaultValue(EventTable.SelectEvent.Args[i].Default);
                         Requirement(argument, _enter);
                     }
                     else
@@ -80,31 +80,10 @@ namespace CabinIcarus.BoltExtensions.Units
                     }
                 }
             }
-            else
-            {
-                for (var i = 0; i < EventArgCount; i++)
-                {
-                    var argument = ValueInput<object>("argument_" + i);
-                    arguments.Add(argument);
-                    Requirement(argument, _enter);
-                }
-            }
             
             Requirement(EventName, _enter);
             Requirement(target, _enter);
             Succession(_enter, _exit);
-        }
-
-        private void _setEventArgCountAndArgList()
-        {
-            //没有事件表资源初始化
-            if (EventTable == null || EventTable.Events == null)
-            {
-                return;
-            }
-
-            EventArgCount = EventTable.GetArgCount();
-
         }
 
         protected override ControlOutput Enter(Flow flow)
@@ -117,7 +96,5 @@ namespace CabinIcarus.BoltExtensions.Units
 
             return _exit;
         }
-
-        
     }
 }

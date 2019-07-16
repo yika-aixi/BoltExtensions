@@ -16,6 +16,7 @@ namespace CabinIcarus.BoltExtensions.Units
 //    [UnitCategory("Icarus/Util/Events")]
     [UnitCategory("Events")]
     [UnitTitle("NewCustomEvent")]
+    [TypeIcon(typeof(CustomEvent))]
     [UnitOrder(0)]
     public class NewCustomEventUnit : GameObjectEventUnit<CustomEventArgs>, IEventBaseUnit
     {
@@ -26,16 +27,13 @@ namespace CabinIcarus.BoltExtensions.Units
         [Serialize]
         [Inspectable, UnitHeaderInspectable("Events")]
         public EventTable EventTable { get; private set; }
-        
+
         [DoNotSerialize]
         public ValueInput EventId { get; private set; }
+        
         [DoNotSerialize]
         [PortLabel("Event Name")]
         public ValueInput EventName { get; private set; }
-
-        [Serialize]
-        [Inspectable, UnitHeaderInspectable("ArgCount")]
-        public int EventArgCount { get; private set; }
 
         private static readonly string NewhookName = $"New {EventHooks.Custom}";
         protected override string hookName => NewhookName;
@@ -50,16 +48,15 @@ namespace CabinIcarus.BoltExtensions.Units
             EventName = ValueInput(nameof(EventName), string.Empty);
 
             argumentPorts.Clear();
-            _setEventArgCountAndArgList();
-            if (EventTable != null && EventTable.SelectEvent != null &&
-                EventTable.SelectEvent.Args != null &&
-                EventTable.SelectEvent.Args.Count == EventArgCount)
+            
+            if (EventTable != null)
             {
+                EventTable.SelectEvent = EventTable.GetEvent(EventTable.SelectEvent.EventID);
+                
                 for (var i = 0; i < EventTable.SelectEvent.Args.Count; i++)
                 {
                     var arg = EventTable.SelectEvent.Args[i];
                     var argName = arg.ArgName;
-
                     if (string.IsNullOrWhiteSpace(argName))
                     {
                         argName = $"argument_{i}";
@@ -68,25 +65,6 @@ namespace CabinIcarus.BoltExtensions.Units
                     argumentPorts.Add(ValueOutput(arg.ArgType, argName));
                 }
             }
-            else
-            {
-                for (var i = 0; i < EventArgCount; i++)
-                {
-
-                    argumentPorts.Add(ValueOutput<object>("argument_" + i));
-                }
-            }
-        }
-        private void _setEventArgCountAndArgList()
-        {
-            //没有事件表资源初始化
-            if (EventTable == null || EventTable.Events == null)
-            {
-                return;
-            }
-
-            EventArgCount = EventTable.GetArgCount();
-
         }
 
         protected override bool ShouldTrigger(Flow flow, CustomEventArgs args)
@@ -96,7 +74,7 @@ namespace CabinIcarus.BoltExtensions.Units
 
         protected override void AssignArguments(Flow flow, CustomEventArgs args)
         {
-            for (var i = 0; i < EventArgCount; i++)
+            for (var i = 0; i < EventTable.SelectEvent.Args.Count; i++)
             {
                 flow.SetValue(argumentPorts[i], args.arguments[i]);
             }
