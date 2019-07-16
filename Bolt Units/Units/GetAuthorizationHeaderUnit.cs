@@ -10,7 +10,7 @@ using Ludiq;
 
 namespace CabinIcarus.BoltExtensions.Units
 {
-    [UnitCategory("Icarus/Util")]
+    [UnitCategory("Icarus")]
     [UnitTitle("获取授权头")]
     [UnitSubtitle("HFS用的，不知道其他的是否可用")]
     public class GetAuthorizationHeaderUnit:Unit

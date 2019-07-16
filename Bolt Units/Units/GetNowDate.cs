@@ -10,7 +10,7 @@ using Ludiq;
 
 namespace CabinIcarus.BoltExtensions.Units
 {
-    [UnitCategory("Icarus/Util")]
+    [UnitCategory("Icarus")]
     [UnitTitle("Get Now Date Time")]
     [UnitSubtitle("获取当前本地时间")]
     public class GetNowDate : IcUnit

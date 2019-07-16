@@ -10,7 +10,7 @@ using Ludiq;
 
 namespace CabinIcarus.BoltExtensions.Units
 {
-    [UnitCategory("Icarus/Util")]
+    [UnitCategory("Icarus")]
     [UnitTitle("枚举转Int或String")]
     [UnitSubtitle("To Int 为false为string")]
     public class EnumToIntOrString: IcUnit

@@ -12,7 +12,7 @@ using Ludiq;
 
 namespace CabinIcarus.BoltExtensions.Units
 {
-    [UnitCategory("Icarus/Util")]
+    [UnitCategory("Icarus")]
     [UnitTitle("获取指定目录下所有文件路径")]
     [UnitSubtitle("如果路径错误将返回null")]
     public class GetDirectoryFilePaths : IcUnit

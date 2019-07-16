@@ -10,7 +10,7 @@ using Ludiq;
 
 namespace CabinIcarus.BoltExtensions.Units
 {
-    [UnitCategory("Icarus/Util")]
+    [UnitCategory("Icarus")]
     [UnitTitle("转义符转换")]
     public class EscapeReplaceUnit:IcUnit
     {

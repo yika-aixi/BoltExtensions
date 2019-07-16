@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace CabinIcarus.BoltExtensions.Units.UGUI
 {
-    [UnitCategory("Icarus/Util/UGUI")]
+    [UnitCategory("Icarus/UGUI")]
     [UnitTitle("Text Content Append")]
     [UnitSubtitle("Text组件内容追加")]
     public class TextAppend:IcUnit
