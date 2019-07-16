@@ -137,7 +137,28 @@ namespace CabinIcarus.BoltExtensions.Event
 
         public bool Equals(ArgEntity other)
         {
-            return _argName == other._argName && _argTypeStr == other._argTypeStr && _notNull == other._notNull;
+            return _argName == other._argName && 
+                   _argTypeStr == other._argTypeStr && 
+                   _notNull == other._notNull && 
+                   _isDefault == other._isDefault && 
+                   _default == other._default;
+        }
+
+        public override int GetHashCode()
+        {
+            var baseCode = 98;
+
+            var code = baseCode + _argName.GetHashCode();
+
+            code += _argTypeStr?.GetHashCode() ?? 0;
+
+            code += _notNull.GetHashCode();
+
+            code += _isDefault.GetHashCode();
+
+            code += _default?.GetHashCode() ?? 0;
+
+            return code;
         }
     }
 
