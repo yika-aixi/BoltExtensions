@@ -8,9 +8,11 @@ using Ludiq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CabinIcarus.BoltExtensions.Utility;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using Object = UnityEngine.Object;
 using Type = System.Type;
 
 namespace CabinIcarus.BoltExtensions.Event
@@ -25,12 +27,14 @@ namespace CabinIcarus.BoltExtensions.Event
 
         private void OnEnable()
         {
-            _tableAsset = (EventTableScriptableObject)target;
+            _tableAsset = (EventTableScriptableObject) target;
             _events = serializedObject.FindProperty("_events");
+            _argNames = new List<string>();
         }
 
         private bool _addMode;
         private bool _autoSave;
+
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
@@ -76,7 +80,7 @@ namespace CabinIcarus.BoltExtensions.Event
             }
             serializedObject.ApplyModifiedProperties();
         }
-        
+
         protected void DrawUILine(Color color, int thickness = 2, int padding = 10)
         {
             Rect r = EditorGUILayout.GetControlRect(GUILayout.Height(padding + thickness));
@@ -99,7 +103,7 @@ namespace CabinIcarus.BoltExtensions.Event
                     var eventArgs = @event.FindPropertyRelative("_args");
 
                     EditorGUILayout.LabelField($"{i}:{eventName.stringValue}");
-                    
+
                     EditorGUILayout.BeginHorizontal();
                     {
                         EditorGUILayout.PropertyField(eventName, GUIContent.none);
@@ -129,6 +133,8 @@ namespace CabinIcarus.BoltExtensions.Event
             }
         }
 
+        private List<string> _argNames;
+
         private void _showArgs(int index, SerializedProperty eventArgs)
         {
             EditorGUI.indentLevel++;
@@ -138,20 +144,32 @@ namespace CabinIcarus.BoltExtensions.Event
                     return;
                 }
 
+                _argNames.Clear();
+
                 for (int i = 0; i < eventArgs.arraySize; i++)
                 {
                     var arg = eventArgs.GetArrayElementAtIndex(i);
-                    var argName = arg.FindPropertyRelative("_argName");
+                    var argName = GetArfNamePropertye(arg);
                     var argTypeStr = arg.FindPropertyRelative("_argTypeStr");
                     var argDesc = arg.FindPropertyRelative("_argDesc");
                     var argNotNull = arg.FindPropertyRelative("_notNull");
-//                var isDefault = arg.FindPropertyRelative("_isDefault");
-                    // var @default = arg.FindPropertyRelative("_default");
+                    var isDefault = arg.FindPropertyRelative("_isDefault");
+                    var isDefaultUnitySer = arg.FindPropertyRelative("DefaultIsUntiySerialization");
+                    
                     EditorGUI.indentLevel++;
                     {
                         if (i != 0)
                         {
                             DrawUILine(Color.white);
+                        }
+
+                        if (!_argNames.Exists(x => x == argName.stringValue))
+                        {
+                            _argNames.Add(argName.stringValue);
+                        }
+                        else
+                        {
+                            argName.stringValue = string.Empty;
                         }
 
                         EditorGUIUtility.labelWidth = 80f;
@@ -171,15 +189,23 @@ namespace CabinIcarus.BoltExtensions.Event
                         }
                         EditorGUILayout.EndHorizontal();
 
-//                    EditorGUIUtility.labelWidth = 80f;
-//                    EditorGUILayout.PropertyField(isDefault, new GUIContent("Is Default:"));
+                        EditorGUIUtility.labelWidth = 80f;
 
-//                    if (isDefault.boolValue)
-//                    {
-//                        EditorGUIUtility.labelWidth = 60f;
-//                        EditorGUILayout.PropertyField(@default, new GUIContent("Default:"));
-//                    }
+                        if (!isDefaultUnitySer.boolValue)
+                        {
+                            Debug.LogWarning("不支持的序列化类型,请参考-> https://docs.unity3d.com/Manual/script-Serialization.html#ClassSerialized");
+                            goto end;
+                        }
 
+                        EditorGUILayout.PropertyField(isDefault, new GUIContent("Is Default:"));
+
+                        if (isDefault.boolValue)
+                        {
+                            EditorGUIUtility.labelWidth = 60f;
+                            _drawSetDefault(arg,Type.GetType(argTypeStr.stringValue));
+                        }
+
+                        end: 
                         EditorGUIUtility.labelWidth = 60f;
                         EditorGUILayout.PropertyField(argDesc, new GUIContent("Desc:"));
                     }
@@ -187,7 +213,131 @@ namespace CabinIcarus.BoltExtensions.Event
                 }
             }
             EditorGUI.indentLevel--;
+        }
 
+        private void _drawSetDefault(SerializedProperty arg, Type paraType)
+        {
+            SerializedProperty @default;
+//            EditorGUILayout.PropertyField(@default, new GUIContent("Default:"));
+            if (paraType == typeof(int))
+            {
+                @default = arg.FindPropertyRelative("_intValue");
+                
+                @default.intValue = EditorGUILayout.IntField("Default:", @default.intValue);
+            }
+            else if (paraType == typeof(string))
+            {
+                @default = arg.FindPropertyRelative("_stringValue");
+                @default.stringValue = EditorGUILayout.TextField("Default:", @default.stringValue);
+            }
+            else if (paraType == typeof(float))
+            {
+                @default = arg.FindPropertyRelative("_floatValue");
+                @default.floatValue = EditorGUILayout.FloatField("Default:", @default.floatValue);
+            }
+            else if (paraType == typeof(double))
+            {
+                @default = arg.FindPropertyRelative("_doubleValue");
+                @default.doubleValue = EditorGUILayout.DoubleField("Default:", @default.doubleValue);
+            }
+            else if (paraType == typeof(bool))
+            {
+                @default = arg.FindPropertyRelative("_boolValue");
+                @default.boolValue = EditorGUILayout.Toggle("Default:", @default.boolValue);
+            }
+            else if (paraType == typeof(long))
+            {
+                @default = arg.FindPropertyRelative("_longValue");
+                @default.longValue = EditorGUILayout.LongField("Default:", @default.longValue);  
+            }
+            else if (paraType == typeof(Quaternion))
+            {
+                @default = arg.FindPropertyRelative("_quaternionValue");
+                @default.quaternionValue = EditorGUILayout.Vector4Field("Default:", @default.quaternionValue.ToVect4()).ToQuaternion();  
+            }
+            else if (paraType == typeof(Object))
+            {
+                @default = arg.FindPropertyRelative("_objectValue");
+                @default.objectReferenceValue =
+                    EditorGUILayout.ObjectField("Default(Non Scene Object)", @default.objectReferenceValue, typeof(Object), false);
+            }
+            else if (paraType == typeof(Vector2))
+            {
+                @default = arg.FindPropertyRelative("_vector2Value");
+                @default.vector2Value =
+                    EditorGUILayout.Vector2Field("Default", @default.vector2Value);
+            }
+            else if (paraType == typeof(Vector3))
+            {
+                @default = arg.FindPropertyRelative("_vector3Value");
+                @default.vector3Value =
+                    EditorGUILayout.Vector3Field("Default", @default.vector3Value);
+            }
+            else if (paraType == typeof(Vector4))
+            {
+                @default = arg.FindPropertyRelative("_vector4Value");
+                @default.vector4Value =
+                    EditorGUILayout.Vector4Field("Default", @default.vector4Value);
+            }
+            else if (paraType == typeof(Vector2Int))
+            {
+                @default = arg.FindPropertyRelative("_vector2IntValue");
+                @default.vector2IntValue =
+                    EditorGUILayout.Vector2IntField("Default", @default.vector2IntValue);
+            }
+            else if (paraType == typeof(Vector3Int))
+            {
+                @default = arg.FindPropertyRelative("_vector3IntValue");
+                @default.vector3IntValue =
+                    EditorGUILayout.Vector3IntField("Default", @default.vector3IntValue);
+            }
+            else if (paraType == typeof(Color))
+            {
+                @default = arg.FindPropertyRelative("_colorValue");
+                @default.colorValue =
+                    EditorGUILayout.ColorField("Default", @default.colorValue);
+            }
+            else if (paraType == typeof(Rect))
+            {
+                @default = arg.FindPropertyRelative("_rectValue");
+                @default.rectValue =
+                    EditorGUILayout.RectField("Default", @default.rectValue);
+            }
+            else if (paraType == typeof(RectInt))
+            {
+                @default = arg.FindPropertyRelative("_rectIntValue");
+                @default.rectIntValue =
+                    EditorGUILayout.RectIntField("Default", @default.rectIntValue);
+            }
+            else if (paraType == typeof(Bounds))
+            {
+                @default = arg.FindPropertyRelative("_boundsValue");
+                @default.boundsValue =
+                    EditorGUILayout.BoundsField("Default", @default.boundsValue);
+            }
+            else if (paraType == typeof(BoundsInt))
+            {
+                @default = arg.FindPropertyRelative("_boundsIntValue");
+                @default.boundsIntValue =
+                    EditorGUILayout.BoundsIntField("Default", @default.boundsIntValue);
+            }
+            else if (paraType == typeof(Enum))
+            {
+                @default = arg.FindPropertyRelative("_enumIndexValue");
+                @default.enumValueIndex =
+                    EditorGUILayout.Popup("Default", @default.enumValueIndex,Enum.GetNames(paraType));
+            }
+            else if (paraType == typeof(AnimationCurve))
+            {
+                @default = arg.FindPropertyRelative("_animationCurveValue");
+                @default.animationCurveValue =
+                    EditorGUILayout.CurveField("Default", @default.animationCurveValue);
+            }
+        }
+
+        private static SerializedProperty GetArfNamePropertye(SerializedProperty arg)
+        {
+            return arg.FindPropertyRelative("_argName");
         }
 
         readonly List<bool> _foldoutState = new List<bool>();
@@ -206,6 +356,7 @@ namespace CabinIcarus.BoltExtensions.Event
         }
 
         private bool _removeConfirm = false;
+
         private void _removeAll()
         {
             if (_events.arraySize > 0)
@@ -234,7 +385,6 @@ namespace CabinIcarus.BoltExtensions.Event
                         _removeConfirm = true;
                     }
                 }
-
             }
         }
 
@@ -256,6 +406,7 @@ namespace CabinIcarus.BoltExtensions.Event
                     {
                         return;
                     }
+
                     if (_names.Contains(_eventName))
                     {
                         return;
@@ -296,6 +447,7 @@ namespace CabinIcarus.BoltExtensions.Event
             eventArgsSer.arraySize = argCount;
             _initEventArgs(eventArgsSer);
         }
+
         /// <summary>
         /// 增加了arraySize后他会复制最后一个元素的值,所以在这里重置一下
         /// </summary>
@@ -320,13 +472,13 @@ namespace CabinIcarus.BoltExtensions.Event
         private void _selectType(SerializedProperty argTypeStr)
         {
             if (GUILayout.Button("Select Type"))
-            { 
+            {
                 var rect = _getFuzzyWindowRect();
-                
+
                 FuzzyWindow.Show(rect,
                     _getOptionTree(_getCurrentType(argTypeStr.stringValue)), (option) =>
                     {
-                        argTypeStr.stringValue = ((Type)option.value).AssemblyQualifiedName;
+                        argTypeStr.stringValue = ((Type) option.value).AssemblyQualifiedName;
 
                         serializedObject.ApplyModifiedProperties();
 
@@ -339,8 +491,8 @@ namespace CabinIcarus.BoltExtensions.Event
         private Rect _getFuzzyWindowRect()
         {
             var eve = UnityEngine.Event.current;
-            
-            var rect = new Rect(eve.mousePosition.x - 250, eve.mousePosition.y, 0,0);
+
+            var rect = new Rect(eve.mousePosition.x - 250, eve.mousePosition.y, 0, 0);
 
             return rect;
         }

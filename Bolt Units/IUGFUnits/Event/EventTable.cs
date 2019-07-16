@@ -13,7 +13,7 @@ using UnityEngine;
 namespace CabinIcarus.BoltExtensions.Event
 {
     [System.Serializable]
-    public class ArgEntity
+    public partial class ArgEntity
     {
         [SerializeField]
         private string _argName;
@@ -24,10 +24,10 @@ namespace CabinIcarus.BoltExtensions.Event
         private string _argDesc;
         [SerializeField]
         private bool _notNull;
-//        [SerializeField]
-//        private bool _isDefault;
-//        [SerializeField]
-//        private object _default;
+        [SerializeField]
+        private bool _isDefault;
+        [SerializeField]
+        private object _default;
 
         public ArgEntity(ArgEntity arg)
         {
@@ -35,8 +35,8 @@ namespace CabinIcarus.BoltExtensions.Event
             _argTypeStr = arg.ArgTypeStr;
             _argDesc = arg.ArgDesc;
             _notNull = arg.NotNull;
-//            _isDefault = arg.IsDefault;
-//            _default = arg.Default;
+            IsDefault = arg.IsDefault;
+            Default = arg.Default;
         }
 
         public ArgEntity():this(string.Empty,typeof(object).AssemblyQualifiedName,string.Empty,true)
@@ -51,10 +51,8 @@ namespace CabinIcarus.BoltExtensions.Event
             _notNull = notNull;
         }
 
-        public ArgEntity(string argName, string argAssemblyQualifiedName)
+        public ArgEntity(string argName, string argAssemblyQualifiedName):this(argName,argAssemblyQualifiedName,string.Empty,true)
         {
-            _argName = argName;
-            _argTypeStr = argAssemblyQualifiedName;
         }
 
         /// <summary>
@@ -79,15 +77,68 @@ namespace CabinIcarus.BoltExtensions.Event
 
         public string ArgTypeStr => _argTypeStr;
 
-//        public bool IsDefault => _isDefault;
-//
-//        public object Default => _default;
+        /// <summary>
+        /// 是否存在默认值
+        /// </summary>
+        public bool IsDefault
+        {
+            get { return _isDefault; }
+            set { _isDefault = value; }
+        }
+
+        /// <summary>
+        /// 默认值
+        /// </summary>
+        public object Default
+        {
+            get { return _default; }
+            set { _default = value; }
+        }
 
         public override string ToString()
         {
             return ArgName;
         }
 
+        public static bool operator ==(ArgEntity a, ArgEntity b)
+        {
+            if (ReferenceEquals(a,null) && ReferenceEquals(b,null))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(a,null))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(b,null))
+            {
+                return false;
+            }
+            
+            return  a.Equals(b);
+        }
+
+        public static bool operator !=(ArgEntity a, ArgEntity b)
+        {
+            return !(a == b);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ArgEntity other))
+            {
+                return false;
+            }
+
+            return Equals(other);
+        }
+
+        public bool Equals(ArgEntity other)
+        {
+            return _argName == other._argName && _argTypeStr == other._argTypeStr && _notNull == other._notNull;
+        }
     }
 
     [System.Serializable]
@@ -105,9 +156,6 @@ namespace CabinIcarus.BoltExtensions.Event
             this._eventName = eventName;
             this._eventId = eventID;
         }
-
-       
-
 
         public string EventName
         {
@@ -177,7 +225,7 @@ namespace CabinIcarus.BoltExtensions.Event
         {
             if (Events == null)
             {
-                return null;
+                return SelectEvent;
             }
 
             var @event = Events.FirstOrDefault(x => x.EventID == eventID);
