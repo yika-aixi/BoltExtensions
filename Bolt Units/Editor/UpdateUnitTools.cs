@@ -44,6 +44,12 @@ namespace CabinIcarus.BoltExtensions
             _helpType = (HelpType)EditorGUILayout.EnumPopup("Luanage:", _helpType);
             _updateHelpIndex((int)_helpType);
 
+            if (!BoltCore.Manifest.version.ToString().StartsWith("1.4"))
+            {
+                EditorGUILayout.HelpBox(string.Format(_getI18NValue(ConstTable.NoSKey),BoltCore.Manifest.version.ToString()),MessageType.Warning);
+                return;
+            }
+            
             EditorGUIUtility.labelWidth = 200;
             _createTextField(ref _oldNameSpace, _getI18NValue(ConstTable.OldNameSpacesKey));
             EditorGUIUtility.labelWidth = 0;
@@ -110,6 +116,7 @@ namespace CabinIcarus.BoltExtensions
                 { ConstTable.StrictKey,"Strict Mode"},
                 { ConstTable.SelectDirectoryKey,"Start Directory Update"},
                 { ConstTable.SelectFileKey,"Start Select File Update"},
+                { ConstTable.NoSKey,"Unsupported version {0} only supports `1.4.x`"},
             });
 
             _i18NManager.Add(HelpType.中文, new Dictionary<string, string>()
@@ -127,6 +134,7 @@ namespace CabinIcarus.BoltExtensions
                 { ConstTable.StrictKey,"严格模式"},
                 { ConstTable.SelectDirectoryKey,"选择需要更新得目录"},
                 { ConstTable.SelectFileKey,"选择需要更新得文件"},
+                { ConstTable.NoSKey, "不支持的版本{0}只支持`1.4.x`"}
             });
         }
 

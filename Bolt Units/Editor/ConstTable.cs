@@ -16,6 +16,8 @@ namespace CabinIcarus.BoltExtensions
         public const string SelectDirectoryKey = "SelectDirectory";
         public const string SelectFileKey = "SelectFile";
 
+        public const string NoSKey = "NoS";
+        
         public static readonly string[] StrictModeTable =
             {"type","$type","targetType","targetTypeName","_type"};
     }
