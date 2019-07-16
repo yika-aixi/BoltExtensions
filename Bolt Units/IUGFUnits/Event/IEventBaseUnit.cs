@@ -14,11 +14,9 @@ namespace CabinIcarus.BoltExtensions.Event
         EventTableScriptableObject EventTableAsset { get;}
 
         EventTable EventTable { get; }
-
+        
         ValueInput EventId { get; }
 
         ValueInput EventName { get; }
-
-        int EventArgCount { get; }
     }
 }
