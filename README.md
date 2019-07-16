@@ -18,6 +18,10 @@
 
 ![Macro](Images/Macro.png)
 
+> 运行结果:
+
+![Macro](Images/Console.png)
+
 
 3. 在新的`Unit`中会看到`Table Asset`将创建的好的事件表拖入就可以选择事件啦
 
