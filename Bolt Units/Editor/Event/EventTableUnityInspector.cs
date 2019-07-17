@@ -253,11 +253,16 @@ namespace CabinIcarus.BoltExtensions.Event
                 @default = arg.FindPropertyRelative("_quaternionValue");
                 @default.quaternionValue = EditorGUILayout.Vector4Field("Default:", @default.quaternionValue.ToVect4()).ToQuaternion();  
             }
-            else if (paraType == typeof(Object))
+            else if (paraType.IsSubclassOf(typeof(Object)))
             {
-                @default = arg.FindPropertyRelative("_objectValue");
-                @default.objectReferenceValue =
-                    EditorGUILayout.ObjectField("Default(Non Scene Object)", @default.objectReferenceValue, typeof(Object), false);
+                EditorGUIUtility.labelWidth += 115;
+                {
+                    @default = arg.FindPropertyRelative("_objectValue");
+                    @default.objectReferenceValue =
+                        EditorGUILayout.ObjectField("Default(Non Scene Object):", @default.objectReferenceValue,
+                            paraType, false);
+                }
+                EditorGUIUtility.labelWidth = 0;
             }
             else if (paraType == typeof(Vector2))
             {

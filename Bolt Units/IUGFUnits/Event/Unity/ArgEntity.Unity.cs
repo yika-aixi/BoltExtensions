@@ -422,6 +422,11 @@ namespace CabinIcarus.BoltExtensions.Event
         public void OnBeforeSerialize()
         {
             var paraType = Type.GetType(_argTypeStr);
+
+            if (paraType == null)
+            {
+                return;
+            }
             
             if (paraType == typeof(int))
             {
@@ -465,9 +470,9 @@ namespace CabinIcarus.BoltExtensions.Event
                 DefaultIsUntiySerialization = true;
                 _quaternionValue = GetQuaternionValue();
             }
-            else if (paraType == typeof(Object))
+            else if (paraType.IsSubclassOf(typeof(Object)))
             {
-                _unitySerializationTypeASName = typeof(Object);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _objectValue = GetObjectValue();
             }
