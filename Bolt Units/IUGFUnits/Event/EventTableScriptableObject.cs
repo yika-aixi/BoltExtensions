@@ -27,7 +27,7 @@ namespace CabinIcarus.BoltExtensions.Event
         {
             _init();
             int i = 0;
-            foreach (var @event in _table.Events)
+            foreach (var @event in _table?.Events)
             {
                 _events[i] = @event;
 
