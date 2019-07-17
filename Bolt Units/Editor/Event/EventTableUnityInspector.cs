@@ -189,15 +189,17 @@ namespace CabinIcarus.BoltExtensions.Event
                         }
                         EditorGUILayout.EndHorizontal();
 
-                        EditorGUIUtility.labelWidth = 80f;
-
                         if (!isDefaultUnitySer.boolValue)
                         {
                             Debug.LogWarning("不支持的序列化类型,请参考-> https://docs.unity3d.com/Manual/script-Serialization.html#ClassSerialized");
                             goto end;
                         }
 
+                        EditorGUIUtility.labelWidth = 95;
+                        
                         EditorGUILayout.PropertyField(isDefault, new GUIContent("Is Default:"));
+
+                        EditorGUIUtility.labelWidth = 80f;
 
                         if (isDefault.boolValue)
                         {
@@ -207,6 +209,7 @@ namespace CabinIcarus.BoltExtensions.Event
                         end: 
                         EditorGUIUtility.labelWidth = 60f;
                         EditorGUILayout.PropertyField(argDesc, new GUIContent("Desc:"));
+                        EditorGUIUtility.labelWidth = 0f;
                     }
                     EditorGUI.indentLevel--;
                 }
