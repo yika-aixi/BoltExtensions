@@ -430,43 +430,43 @@ namespace CabinIcarus.BoltExtensions.Event
             
             if (paraType == typeof(int))
             {
-                _unitySerializationTypeASName = typeof(int);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _intValue = GetIntValue();
             }
             else if (paraType == typeof(string))
             {
-                _unitySerializationTypeASName = typeof(string);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _stringValue = GetStringValue();
             }
             else if (paraType == typeof(float))
             {
-                _unitySerializationTypeASName = typeof(float);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _floatValue = GetFloatValue();
             }
             else if (paraType == typeof(double))
             {
-                _unitySerializationTypeASName = typeof(double);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _doubleValue = GetDoubleValue();
             }
             else if (paraType == typeof(bool))
             {
-                _unitySerializationTypeASName = typeof(bool);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _boolValue = GetBoolValue();
             }
             else if (paraType == typeof(long))
             {
-                _unitySerializationTypeASName = typeof(long);  
+                _unitySerializationTypeASName = paraType;  
                 DefaultIsUntiySerialization = true;
                 _longValue = GetLongValue();
             }
             else if (paraType == typeof(Quaternion))
             {
-                _unitySerializationTypeASName = typeof(Quaternion);  
+                _unitySerializationTypeASName = paraType;  
                 DefaultIsUntiySerialization = true;
                 _quaternionValue = GetQuaternionValue();
             }
@@ -478,73 +478,73 @@ namespace CabinIcarus.BoltExtensions.Event
             }
             else if (paraType == typeof(Vector2))
             {
-                _unitySerializationTypeASName = typeof(Vector2);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _vector2Value = GetVector2Value();
             }
             else if (paraType == typeof(Vector3))
             {
-                _unitySerializationTypeASName = typeof(Vector3);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _vector3Value = GetVector3Value();
             }
             else if (paraType == typeof(Vector4))
             {
-                _unitySerializationTypeASName = typeof(Vector4);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _vector4Value = GetVector4Value();
             }
             else if (paraType == typeof(Vector2Int))
             {
-                _unitySerializationTypeASName = typeof(Vector2Int);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _vector2IntValue = GetVector2IntValue();
             }
             else if (paraType == typeof(Vector3Int))
             {
-                _unitySerializationTypeASName = typeof(Vector3Int);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _vector3IntValue = GetVector3IntValue();
             }
             else if (paraType == typeof(Color))
             {
-                _unitySerializationTypeASName = typeof(Color);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _colorValue = GetColorValue();
             }
             else if (paraType == typeof(Rect))
             {
-                _unitySerializationTypeASName = typeof(Rect);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _rectValue = GetRectValue();
             }
             else if (paraType == typeof(RectInt))
             {
-                _unitySerializationTypeASName = typeof(RectInt);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _rectIntValue = GetRectIntValue();
             }
             else if (paraType == typeof(Bounds))
             {
-                _unitySerializationTypeASName = typeof(Bounds);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _boundsValue = GetBoundsValue();
             }
             else if (paraType == typeof(BoundsInt))
             {
-                _unitySerializationTypeASName = typeof(BoundsInt);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _boundsIntValue = GetBoundsIntValue();
             }
             else if (paraType == typeof(Enum))
             {
-                _unitySerializationTypeASName = typeof(Enum);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _enumIndexValue = GetEnumIndexValue();
             }
             else if (paraType == typeof(AnimationCurve))
             {
-                _unitySerializationTypeASName = typeof(AnimationCurve);
+                _unitySerializationTypeASName = paraType;
                 DefaultIsUntiySerialization = true;
                 _animationCurveValue = GetAnimationCurveValue();
             }
